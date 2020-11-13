@@ -1,14 +1,35 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, Image, KeyboardAvoidingView, TouchableOpacity,StyleSheet} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
 import Input from '../components/Input';
 import Button from '../components/Button';
 import logo from '../assets/condica_logo.png';
+import { set } from 'react-native-reanimated';
 
-const Login = () => {
+const LoginSreen = ({navigation}) => {
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const [loginBtnDisabled, setLoginBtnDisabled] = useState(true);
+
+    useEffect(() => {
+
+        if (email == "" || password == "") {
+            setLoginBtnDisabled(true);
+        }
+        else {
+            if (loginBtnDisabled == true) {
+                setLoginBtnDisabled(false);   
+            }
+        }
+
+    }, [email, password]);
+
+    const handleCreateAccountPress = (x) => {
+        navigation.navigate('Register');
+    }
 
     return (
         <View style={styles.container}>
@@ -22,9 +43,11 @@ const Login = () => {
             <View style={styles.inputsContainer}>
                 <Input 
                     placeholder="Email*"
+                    onChangeText={setEmail}
                 />
                 <Input 
                     placeholder="Password*"
+                    onChangeText={setPassword}
                     secureTextEntry
                 />
             </View>
@@ -46,14 +69,14 @@ const Login = () => {
                     </TouchableOpacity>
                 </View>
 
-                <Button title="Login"/>
+                <Button title="LOGIN" disabled={loginBtnDisabled}/>
 
             </KeyboardAvoidingView>
 
             <View style={styles.createAccountContainer}>
                 <Text>Don't have an account ?</Text>
 
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleCreateAccountPress}>
                     <Text style={styles.highlightedText}>Create an account</Text>
                 </TouchableOpacity>
             </View>
@@ -108,4 +131,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Login;
+export default LoginSreen;

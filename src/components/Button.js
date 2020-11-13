@@ -1,11 +1,11 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-const Login = ({title}) => {
+const Login = ({title, disabled}) => {
 
     return (
-        <TouchableOpacity style={styles.container}>
-            <Text style={styles.container}>
+        <TouchableOpacity style={[styles.container, disabled && {backgroundColor: 'rgba(0, 0, 0, 0.12)'}]} disabled={disabled}>
+            <Text style={[styles.text, disabled && {color: 'rgba(0, 0, 0, 0.12)'}]}>
                 {title}
             </Text>
         </TouchableOpacity>
@@ -15,16 +15,15 @@ const Login = ({title}) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: "#192d3e",
-        color: "white",
-        padding: 4,
+        padding: 8,
         margin: 4,
         minWidth: 150,
-        textAlign: "center",
         borderRadius: 8,
-        fontSize: 16
     },
     text: {
-        color: "white"
+        color: "white",
+        fontSize: 16,
+        textAlign: "center"
     }
 })
 

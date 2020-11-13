@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {View, Text, Image, TouchableOpacity, KeyboardAvoidingView,  StyleSheet} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
@@ -6,9 +6,39 @@ import logo from '../assets/condica_logo.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
 
-const Register = () => {
+const RegisterScreen = ({navigation}) => {
 
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordCofirm] = useState("");
     const [checkbox, setCheckbox] = useState(false);
+    const [registerBtnDisabled, setRegisterBtnDisabled] = useState(true);
+
+    useEffect(() => {
+
+        console.log("email: ", email);
+        console.log("password: ", password);
+        console.log("passwordConfirm: ", passwordConfirm);
+
+        if (email == "" || password == "" || passwordConfirm == "") {
+            if (registerBtnDisabled == false) {
+                setRegisterBtnDisabled(true);
+            }
+        }
+        else {
+            if (password !== passwordConfirm) {
+                setRegisterBtnDisabled(true);
+            }
+            else {
+                setRegisterBtnDisabled(false);
+            }
+        }
+
+    }, [email, password, passwordConfirm]);
+
+    const handleLogInPress = () => {
+        navigation.pop();
+    }
 
     return (
         <View style={styles.container}>
@@ -20,12 +50,13 @@ const Register = () => {
 
             
             <KeyboardAvoidingView behavior="padding" style={styles.inputsContainer}>
-                <Input placeholder="Email *" />
-                <Input placeholder="Password *" />
-                <Input placeholder="Password ( Confirm ) *" />
+                <Input placeholder="Email *" onChangeText={setEmail}/>
+                <Input placeholder="Password *" secureTextEntry onChangeText={setPassword}/>
+                <Input placeholder="Password ( Confirm ) *" secureTextEntry onChangeText={setPasswordCofirm}/>
 
                 <Button 
                     title="CREATE AN ACCOUNT"
+                    disabled={registerBtnDisabled}
                 />
             </KeyboardAvoidingView>
 
@@ -33,8 +64,8 @@ const Register = () => {
 
             <View style={styles.createAccountContainer}>
                 <Text>Already have an account ?</Text>
-                <TouchableOpacity>
-                    <Text style={styles.highlightedText}>Create an account</Text>
+                <TouchableOpacity onPress={handleLogInPress}>
+                    <Text style={styles.highlightedText}>Log in</Text>
                 </TouchableOpacity>
             </View>
 
@@ -76,4 +107,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default Register;
+export default RegisterScreen;
