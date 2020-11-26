@@ -1,24 +1,34 @@
 import React from 'react';
+import {StyleSheet} from 'react-native';
 import 'react-native-gesture-handler';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
-import {View, StyleSheet} from 'react-native';
+import { Provider } from 'react-redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
 
-import Login from './src/sceenes/LoginScreen';
-import Register from './src/sceenes/RegisterScreen';
+import authReducer from '~/auth/reducers';
 
-const Stack = createStackNavigator();
+import Main from '~/sceenes/main/Main';
+import Auth from '~/auth/Auth';
+
+
+const reducers = combineReducers({
+    authReducer
+})
+const store = createStore(reducers, applyMiddleware(thunk));
+
+
+
 
 const App = () => {
 
   return (
-    
-        <NavigationContainer>
-              <Stack.Navigator headerMode="none" >
-                  <Stack.Screen name="Login" component={Login} />
-                  <Stack.Screen name="Register" component={Register} />
-              </Stack.Navigator>
-        </NavigationContainer>
+        <Provider store={store}>
+            <Auth>
+                <Main />
+            </Auth>
+        </Provider>
+
+
   )
 }
 

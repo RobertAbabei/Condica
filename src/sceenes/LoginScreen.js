@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Image, KeyboardAvoidingView, TouchableOpacity,StyleSheet} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
+import * as authActions from '~/auth/actions';
 
-import Input from '../components/Input';
-import Button from '../components/Button';
-import logo from '../assets/condica_logo.png';
-import { set } from 'react-native-reanimated';
+import Input from '~/components/Input';
+import Button from '~/components/Button';
+import logo from '~/assets/condica_logo.png';
 
 const LoginSreen = ({navigation}) => {
 
@@ -13,6 +13,8 @@ const LoginSreen = ({navigation}) => {
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
     const [loginBtnDisabled, setLoginBtnDisabled] = useState(true);
+
+
 
     useEffect(() => {
 
@@ -27,8 +29,12 @@ const LoginSreen = ({navigation}) => {
 
     }, [email, password]);
 
-    const handleCreateAccountPress = (x) => {
+    const handleCreateAccountPress = (event) => {
         navigation.navigate('Register');
+    }
+
+    const handleLogin = (event) => {
+        authActions.submitLogin(email, password);
     }
 
     return (
@@ -69,7 +75,7 @@ const LoginSreen = ({navigation}) => {
                     </TouchableOpacity>
                 </View>
 
-                <Button title="LOGIN" disabled={loginBtnDisabled}/>
+                <Button title="LOGIN" disabled={loginBtnDisabled} onPress={handleLogin}/>
 
             </KeyboardAvoidingView>
 

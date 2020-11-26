@@ -1,13 +1,17 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-const Login = ({title, disabled}) => {
+const Login = ({title, disabled, onPress}) => {
 
     return (
-        <TouchableOpacity style={[styles.container, disabled && {backgroundColor: 'rgba(0, 0, 0, 0.12)'}]} disabled={disabled}>
-            <Text style={[styles.text, disabled && {color: 'rgba(0, 0, 0, 0.12)'}]}>
-                {title}
-            </Text>
+        <TouchableOpacity 
+            style={[styles.container, disabled && {backgroundColor: 'rgba(0, 0, 0, 0.12)'}]} 
+            disabled={disabled}
+            onPress={onPress}
+            >
+                <Text style={[styles.text, disabled && {color: 'rgba(0, 0, 0, 0.12)'}]}>
+                    {title}
+                </Text>
         </TouchableOpacity>
     )
 }

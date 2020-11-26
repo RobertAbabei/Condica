@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import {View, Text, Image, TouchableOpacity, KeyboardAvoidingView,  StyleSheet} from 'react-native';
 import CheckBox from '@react-native-community/checkbox';
 
+import firebaseService from '~/services/firebase/firebaseService';
+
 import logo from '../assets/condica_logo.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
@@ -15,10 +17,6 @@ const RegisterScreen = ({navigation}) => {
     const [registerBtnDisabled, setRegisterBtnDisabled] = useState(true);
 
     useEffect(() => {
-
-        console.log("email: ", email);
-        console.log("password: ", password);
-        console.log("passwordConfirm: ", passwordConfirm);
 
         if (email == "" || password == "" || passwordConfirm == "") {
             if (registerBtnDisabled == false) {
@@ -40,6 +38,15 @@ const RegisterScreen = ({navigation}) => {
         navigation.pop();
     }
 
+    const handleRegister = () => {
+        firebaseService.auth.createUserWithEmailAndPassword(email, password)
+            .then(response => {
+                const uid = response.user.uid;
+
+                console.log("response.user: ", response.user);
+            })
+    }
+
     return (
         <View style={styles.container}>
 
@@ -57,6 +64,7 @@ const RegisterScreen = ({navigation}) => {
                 <Button 
                     title="CREATE AN ACCOUNT"
                     disabled={registerBtnDisabled}
+                    onPress={handleRegister}
                 />
             </KeyboardAvoidingView>
 
