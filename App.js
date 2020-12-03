@@ -2,20 +2,10 @@ import React from 'react';
 import {StyleSheet} from 'react-native';
 import 'react-native-gesture-handler';
 import { Provider } from 'react-redux';
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-
-import authReducer from '~/auth/reducers';
+import store from '~/store';
 
 import Main from '~/sceenes/main/Main';
 import Auth from '~/auth/Auth';
-
-
-const reducers = combineReducers({
-    authReducer
-})
-const store = createStore(reducers, applyMiddleware(thunk));
-
 
 
 

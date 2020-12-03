@@ -23,8 +23,8 @@ class FirebaseAuth extends Component {
             this.setState({ waitAuthCheck: false });
         })
         .catch((authUser) => {
-            console.log("AUTH -- catch --- ", authUser)
-            console.log("AUTH -- catch --- ", authUser)
+            // console.log("AUTH -- catch --- ", authUser)
+            // console.log("AUTH -- catch --- ", authUser)
             this.setState({ waitAuthCheck: false });
         })
     }

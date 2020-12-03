@@ -12,6 +12,7 @@ const HomeScreen = () => {
     return (
 
         <View style={styles.container}>
+            <Text style={styles.text}>Coming soon</Text>
             <Button 
                 title="LOGOUT"
                 onPress={() => dispatch(AuthActions.logoutUser())}
@@ -25,6 +26,9 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+    },
+    text: {
+        fontSize: 45
     }
 })
 

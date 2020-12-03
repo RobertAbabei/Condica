@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import {View, Text, Image, TouchableOpacity, KeyboardAvoidingView,  StyleSheet} from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import { useDispatch } from 'react-redux';
+import * as authActions from '~/auth/actions'
+import * as messageActions from '~/store/actions/message.actions';
 
 import firebaseService from '~/services/firebase/firebaseService';
 
 import logo from '../assets/condica_logo.png';
 import Input from '../components/Input';
 import Button from '../components/Button';
+import InfoPopUp from '~/components/utils/InfoPopUp';
 
 const RegisterScreen = ({navigation}) => {
 
@@ -15,6 +18,8 @@ const RegisterScreen = ({navigation}) => {
     const [passwordConfirm, setPasswordCofirm] = useState("");
     const [checkbox, setCheckbox] = useState(false);
     const [registerBtnDisabled, setRegisterBtnDisabled] = useState(true);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
 
@@ -39,12 +44,7 @@ const RegisterScreen = ({navigation}) => {
     }
 
     const handleRegister = () => {
-        firebaseService.auth.createUserWithEmailAndPassword(email, password)
-            .then(response => {
-                const uid = response.user.uid;
-
-                console.log("response.user: ", response.user);
-            })
+        dispatch(authActions.registerUser(email, password))
     }
 
     return (
@@ -54,7 +54,7 @@ const RegisterScreen = ({navigation}) => {
                 <Image style={styles.logo} source={logo}/>
                 <Text style={styles.loginText}>CREATE AN ACCOUNT</Text>
             </View>
-
+            <InfoPopUp />
             
             <KeyboardAvoidingView behavior="padding" style={styles.inputsContainer}>
                 <Input placeholder="Email *" onChangeText={setEmail}/>
@@ -75,8 +75,18 @@ const RegisterScreen = ({navigation}) => {
                 <TouchableOpacity onPress={handleLogInPress}>
                     <Text style={styles.highlightedText}>Log in</Text>
                 </TouchableOpacity>
+                {/* <Button 
+                    title="Animate"
+                    onPress={() => {
+                        dispatch(messageActions.showMessage({
+                            message: "There is already an account with that email",
+                            autoHideDuration: 4000
+                        }))
+                    }}
+                /> */}
             </View>
 
+            
         </View>
     )
 }
@@ -112,7 +122,7 @@ const styles = StyleSheet.create({
     },
     highlightedText: {
         color: "#61dafb"
-    }
+    },
 })
 
 export default RegisterScreen;

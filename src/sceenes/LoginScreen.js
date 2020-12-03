@@ -1,11 +1,17 @@
 import React, {useEffect, useState} from 'react';
 import {View, Text, Image, KeyboardAvoidingView, TouchableOpacity,StyleSheet} from 'react-native';
+import { useDispatch } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import CheckBox from '@react-native-community/checkbox';
 import * as authActions from '~/auth/actions';
 
 import Input from '~/components/Input';
 import Button from '~/components/Button';
 import logo from '~/assets/condica_logo.png';
+import InfoPopUp from 'components/utils/InfoPopUp';
+
+const EMAIL_KEY = "@email";
 
 const LoginSreen = ({navigation}) => {
 
@@ -13,8 +19,45 @@ const LoginSreen = ({navigation}) => {
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
     const [loginBtnDisabled, setLoginBtnDisabled] = useState(true);
+    const [passSecureTextEntry, setPassSecureTextEntry] = useState(true);
 
+    const dispatch = useDispatch();
 
+    const EyeSlashIcon = (
+        <Icon
+            name="eye-slash" 
+            size={30} 
+            color="lightgray"
+            onPress={() => setPassSecureTextEntry(!passSecureTextEntry)}
+        />
+    );
+
+    const EyeIcon = (
+        <Icon
+            name="eye" 
+            size={30} 
+            color="lightgray"
+            onPress={() => setPassSecureTextEntry(!passSecureTextEntry)}
+        />
+    );
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const email = await AsyncStorage.getItem(EMAIL_KEY);
+
+                if (email) {
+                    setEmail(email);
+                    setRememberMe(true);
+                }
+                
+            } catch (e) {
+                console.log("Error trying to read data from storage");
+            }
+        }
+
+        getData();
+    }, []);
 
     useEffect(() => {
 
@@ -34,7 +77,36 @@ const LoginSreen = ({navigation}) => {
     }
 
     const handleLogin = (event) => {
-        authActions.submitLogin(email, password);
+        dispatch(authActions.submitLogin(email, password));
+    }
+
+    const handleCheckBoxClick = (value) => {
+        setRememberMe(value);
+
+        if (value && email != "") {
+            storeEmail(email);
+        }
+        else if (!value) {
+            removeItem(EMAIL_KEY)
+        }
+    }
+
+    const storeEmail = async (value) => {
+        try {
+            await AsyncStorage.setItem(EMAIL_KEY, email);
+        } catch (e) {
+            console.log("Error trying to store the email to storage");
+        }
+    }
+
+    const removeItem = async (key) => {
+        try {
+            await AsyncStorage.removeItem(key);
+            return true;
+        } catch (e) {
+            console.log("Error trying to remove item from storage")
+            return false;
+        }
     }
 
     return (
@@ -47,14 +119,16 @@ const LoginSreen = ({navigation}) => {
 
 
             <View style={styles.inputsContainer}>
-                <Input 
+                <Input
+                    value={email}
                     placeholder="Email*"
                     onChangeText={setEmail}
                 />
                 <Input 
                     placeholder="Password*"
                     onChangeText={setPassword}
-                    secureTextEntry
+                    secureTextEntry={passSecureTextEntry}
+                    rightIcon={passSecureTextEntry ? EyeSlashIcon : EyeIcon}
                 />
             </View>
 
@@ -65,7 +139,7 @@ const LoginSreen = ({navigation}) => {
                         <CheckBox 
                             disabled={false}
                             value={rememberMe}
-                            onValueChange={setRememberMe}
+                            onValueChange={handleCheckBoxClick}
                         />
                         <Text>Remember me</Text>
                     </View>
@@ -87,6 +161,7 @@ const LoginSreen = ({navigation}) => {
                 </TouchableOpacity>
             </View>
 
+            <InfoPopUp />
         </View>
     )
 }

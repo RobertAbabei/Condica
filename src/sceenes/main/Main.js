@@ -15,8 +15,8 @@ const Main = () => {
     const authReducer = useSelector(state => state.authReducer.user);
     const { firebaseUser } = authReducer;
 
-    console.log("MAIN -- authReducer: ", authReducer);
-    console.log("MAIN -- firebaseUser: ", firebaseUser);
+    // console.log("MAIN -- authReducer: ", authReducer);
+    // console.log("MAIN -- firebaseUser: ", firebaseUser);
 
     return (
         <NavigationContainer>
